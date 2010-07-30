@@ -16,7 +16,7 @@ name: Scaffold
 provides:
   Scaffold:
     file: lib/Scaffold.pm
-    version: 0.01
+    version: 0.02
   Scaffold::Base:
     file: lib/Scaffold/Base.pm
     version: 0.01
@@ -119,7 +119,7 @@ provides:
     version: 0.01
   Scaffold::Uaf::Manager:
     file: lib/Scaffold/Uaf/Manager.pm
-    version: 0.01
+    version: 0.02
   Scaffold::Uaf::Rule:
     file: lib/Scaffold/Uaf/Rule.pm
     version: 0.01
@@ -131,4 +131,4 @@ provides:
     version: 0.01
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.01
+version: 0.02
