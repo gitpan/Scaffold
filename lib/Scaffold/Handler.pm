@@ -1,10 +1,8 @@
 package Scaffold::Handler;
 
-use warnings;
-use strict;
+our $VERSION = '0.02';
 
-our $VERSION = '0.01';
-
+use 5.8.8;
 use Switch;
 use Try::Tiny;
 use Scaffold::Stash;
@@ -21,6 +19,7 @@ use Scaffold::Class
       'moved_permanently' => "%s",
       'render'            => "%s",
       'not_found'         => "%s",
+      'bad_url'           => "%s",
   },
   constant => {
       DECLINED   => 'scaffold.handler.declined',
@@ -28,6 +27,7 @@ use Scaffold::Class
       MOVED_PERM => 'scaffold.handler.moved_permanently',
       RENDER     => 'scaffold.handler.render',
       NOTFOUND   => 'scaffold.handler.notfound',
+      BADURL     => 'scaffold.handler.bad_url',
   }
 ;
 
@@ -141,6 +141,13 @@ sub not_found {
 
 }
 
+sub bad_url {
+    my ($self, $url) = @_;
+
+    $self->throw_msg(BADURL, 'bad_url', $url);
+    
+}
+
 sub exceptions {
     my ($self, $ex, $action, $location, $module) = @_;
 
@@ -190,6 +197,21 @@ sub exceptions {
                     File not found<br />
                     <span style='font-size: .8em'>
                     File: $info<br />
+                    </span>
+                );
+                $page = $self->custom_error(
+                    $self->scaffold,
+                    $self->page_title,
+                    $text,
+                );
+                $self->scaffold->response->status('404');
+                $self->scaffold->response->body($page);
+            }
+            case BADURL {
+                my $text = qq(
+                    URL not handled<br />
+                    <span style='font-size: .8em'>
+                    URL: $info<br />
                     </span>
                 );
                 $page = $self->custom_error(
@@ -584,6 +606,7 @@ can be overridden.
  Scaffold::Handler::Static
  Scaffold::Lockmgr
  Scaffold::Lockmgr::KeyedMutex
+ Scaffold::Lockmgr::UnixMutex
  Scaffold::Plugins
  Scaffold::Render
  Scaffold::Render::Default

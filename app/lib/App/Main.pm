@@ -1,13 +1,11 @@
-package App::Cached;
-
-use strict;
-use warnings;
+package App::Main;
 
 our $VERSION = '0.01';
 
 use Scaffold::Class
   version => $VERSION,
-  base    => 'Scaffold::Handler'
+  base    => 'Scaffold::Handler',
+  mixin   => 'Scaffold::Uaf::Authenticate',
 ;
 
 # ----------------------------------------------------------------------
@@ -17,28 +15,16 @@ use Scaffold::Class
 sub do_main {
     my $self = shift;
 
-    my $cache = $self->scaffold->cache;
-    my $cached_html;
-    my $html = qq(
-        <html>
-            <head></head>
-            <body>
-                <p>Cached page</p>
-            </body>
-        </html>
-    );
+    my $data = {
+        header  => 'An Example Web Site',
+        menu    => 'main_menu.tt',
+        content => 'content.tt',
+    };
 
-    if ($cached_html = $cache->get('do_main')) {
-
-        $self->stash->view->data($cached_html);
-
-    } else {
-
-        $self->stash->view->cache(1);
-        $self->stash->view->cache_key('do_main');
-        $self->stash->view->data($html);
-
-    }
+    $self->stash->view->data($data);
+    $self->stash->view->title("Scaffold");
+    $self->stash->view->template("main.tt");
+    $self->stash->view->template_wrapper("wrapper.tt");
 
 }
 
@@ -52,22 +38,19 @@ __END__
 
 =head1 NAME
 
-App::HelloWorld - A test handler for Scaffold
+App::Main - A test handler for Scaffold
 
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
 
-=head1 ACCESSORS
+=head1 METHODS
 
 =over 4
 
 =back
 
 =head1 SEE ALSO
-
- Scaffold::Base
- Scaffold::Class
 
 =head1 AUTHOR
 

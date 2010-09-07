@@ -1,10 +1,8 @@
 package Scaffold::Lockmgr;
 
-use strict;
-use warnings;
-
 our $VERSION = '0.01';
 
+use 5.8.8;
 use Scaffold::Class
   version   => $VERSION,
   base      => 'Scaffold::Base',
@@ -27,6 +25,17 @@ sub unlock {
 
 sub try_lock {
     my ($self, $key) = @_;
+
+}
+
+sub allocate {
+    my ($self, $key) = @_;
+    
+}
+
+sub deallocate {
+    my ($self, $key) = @_;
+      
 
 }
 
@@ -69,9 +78,23 @@ for Scaffold.
 
 =over 4
 
+=item allocate
+
+ $self->scaffold->lockmgr->allocate($lock);
+
+Reserve a lock by this name. This needs to be done before a lock is used.
+This name can be used when trying to lock and unlock resources.
+
+=item deallocate
+
+ $self->scaffold->lockmgr->deallocate($lock);
+
+Removes the reservation for the name. This frees up a lock that can be 
+subseqently reused.
+
 =item lock
 
-Aquire a lock on a resource, return true if successful.
+Aquires a lock on a resource, return true if successful.
 
  $self->scaffold->lockmgr->lock($lock);
 
@@ -102,11 +125,13 @@ is available.
  Scaffold::Constants
  Scaffold::Engine
  Scaffold::Handler
+ Scaffold::Handler::Default
  Scaffold::Handler::Favicon
  Scaffold::Handler::Robots
  Scaffold::Handler::Static
  Scaffold::Lockmgr
  Scaffold::Lockmgr::KeyedMutex
+ Scaffold::Lockmgr::UnixMutex
  Scaffold::Plugins
  Scaffold::Render
  Scaffold::Render::Default

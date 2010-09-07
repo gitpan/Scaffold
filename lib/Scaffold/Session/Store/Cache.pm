@@ -1,10 +1,8 @@
 package Scaffold::Session::Store::Cache;
 
-use strict;
-use warnings;
-
 our $VERSION = '0.01';
 
+use 5.8.8;
 use base 'Class::Accessor::Fast';
 
 __PACKAGE__->mk_ro_accessors(qw/cache expires/);
@@ -100,11 +98,13 @@ caching system.
  Scaffold::Constants
  Scaffold::Engine
  Scaffold::Handler
+ Scaffold::Handler::Default
  Scaffold::Handler::Favicon
  Scaffold::Handler::Robots
  Scaffold::Handler::Static
  Scaffold::Lockmgr
  Scaffold::Lockmgr::KeyedMutex
+ Scaffold::Lockmgr::UnixMutex
  Scaffold::Plugins
  Scaffold::Render
  Scaffold::Render::Default

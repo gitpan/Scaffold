@@ -1,10 +1,8 @@
 package Scaffold::Server;
 
-use strict;
-use warnings;
-
 our $VERSION = '0.01';
 
+use 5.8.8;
 use Try::Tiny;
 use Plack::Response;
 use Scaffold::Engine;
@@ -13,7 +11,7 @@ use Scaffold::Stash::Manager;
 use Scaffold::Render::Default;
 use Scaffold::Cache::FastMmap;
 use Scaffold::Session::Manager;
-use Scaffold::Lockmgr::KeyedMutex;
+use Scaffold::Lockmgr::UnixMutex;
 
 use Scaffold::Class
   version    => $VERSION,
@@ -87,7 +85,13 @@ sub dispatch {
 
         }
 
-        $self->throw_msg(NODEFINE, 'nodefine', $url) if (! $processed);
+        if (! $processed) {
+
+            my $mod = $self->config('default_handler');
+            $class = $self->_init_handler($mod, $location);
+            $response = $class->handler($self, $location, ref($class));
+
+        }
 
     } catch {
 
@@ -132,6 +136,18 @@ sub init {
 
     }
 
+    # init the lockmgr
+
+    if (my $lockmgr = $self->config('lockmgr')) {
+
+        $self->{lockmgr} = $lockmgr;
+
+    } else {
+
+        $self->{lockmgr} = Scaffold::Lockmgr::UnixMutex->new();
+
+    }
+
     push(@{$self->{plugins}}, Scaffold::Cache::Manager->new());
     push(@{$self->{plugins}}, Scaffold::Stash::Manager->new());
 
@@ -156,18 +172,6 @@ sub init {
     } else {
 
         $self->_init_plugin('Scaffold::Session::Manager');
-
-    }
-
-    # init the lockmgr
-
-    if (my $lockmgr = $self->config('lockmgr')) {
-
-        $self->{lockmgr} = $lockmgr;
-
-    } else {
-
-        $self->{lockmgr} = Scaffold::Lockmgr::KeyedMutex->new();
 
     }
 
@@ -335,6 +339,12 @@ sub _set_config_defaults {
 
     }
 
+    if (! defined($self->{config}->{default_handler})) {
+
+        $self->{config}->{default_handler} = 'Scaffold::Handler::Default';
+
+    }
+
 }
 
 sub _unexpected_exception {
@@ -437,11 +447,13 @@ handling.
  Scaffold::Constants
  Scaffold::Engine
  Scaffold::Handler
+ Scaffold::Handler::Default
  Scaffold::Handler::Favicon
  Scaffold::Handler::Robots
  Scaffold::Handler::Static
  Scaffold::Lockmgr
  Scaffold::Lockmgr::KeyedMutex
+ Scaffold::Lockmgr::UnixMutex
  Scaffold::Plugins
  Scaffold::Render
  Scaffold::Render::Default

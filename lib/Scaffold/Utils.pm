@@ -1,10 +1,8 @@
 package Scaffold::Utils;
 
-use strict;
-use warnings;
-
 our $VERSION = '0.01';
 
+use 5.8.8;
 use Try::Tiny;
 use Crypt::CBC;
 use Badger::Exception trace => 1;
@@ -18,6 +16,8 @@ use Scaffold::Class
       any => 'encrypt decrypt init_module',
   },
 ;
+
+use Data::Dumper;
 
 # ----------------------------------------------------------------------
 # Public Methods
@@ -199,11 +199,13 @@ load and initializes a module
  Scaffold::Constants
  Scaffold::Engine
  Scaffold::Handler
+ Scaffold::Handler::Default
  Scaffold::Handler::Favicon
  Scaffold::Handler::Robots
  Scaffold::Handler::Static
  Scaffold::Lockmgr
  Scaffold::Lockmgr::KeyedMutex
+ Scaffold::Lockmgr::UnixMutex
  Scaffold::Plugins
  Scaffold::Render
  Scaffold::Render::Default

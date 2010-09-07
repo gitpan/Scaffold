@@ -1,8 +1,6 @@
 package Scaffold::Uaf::GrantAllRule;
 
-use 5.008;
-use strict;
-use warnings;
+use 5.8.8;
 
 use Scaffold::Class
   version => '0.01',
@@ -68,11 +66,13 @@ that people will complain about (so you can fix it).
  Scaffold::Constants
  Scaffold::Engine
  Scaffold::Handler
+ Scaffold::Handler::Handler
  Scaffold::Handler::Favicon
  Scaffold::Handler::Robots
  Scaffold::Handler::Static
  Scaffold::Lockmgr
  Scaffold::Lockmgr::KeyedMutex
+ Scaffold::Lockmgr::UnixMutex
  Scaffold::Plugins
  Scaffold::Render
  Scaffold::Render::Default

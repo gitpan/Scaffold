@@ -1,10 +1,8 @@
 package Scaffold::Cache::Manager;
 
-use strict;
-use warnings;
-
 our $VERSION = '0.01';
 
+use 5.8.8;
 use Scaffold::Class
   version   => $VERSION,
   base      => 'Scaffold::Plugins',
@@ -55,11 +53,13 @@ initializes. Thus it is the first plugin that is executed.
  Scaffold::Constants
  Scaffold::Engine
  Scaffold::Handler
+ Scaffold::Handler::Default
  Scaffold::Handler::Favicon
  Scaffold::Handler::Robots
  Scaffold::Handler::Static
  Scaffold::Lockmgr
  Scaffold::Lockmgr::KeyedMutex
+ Scaffold::Lockmgr::UnixMutex
  Scaffold::Plugins
  Scaffold::Render
  Scaffold::Render::Default

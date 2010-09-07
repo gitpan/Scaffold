@@ -12,9 +12,14 @@ my $psgi_handler;
 main: {
 
     my $server = Scaffold::Server->new(
+        configs => {
+            static_search      => 'html:html/resources',
+            uaf_login_wrapper  => 'uaf_wrapper.tt',
+            uaf_logout_wrapper => 'uaf_wrapper.tt',
+            uaf_denied_wrapper => 'uaf_wrapper.tt',
+        },
         locations => {
-            '/'            => 'App::HelloWorld',
-            '/test'        => 'App::Cached',
+            '/'            => 'App::Main',
             '/robots.txt'  => 'Scaffold::Handler::Robots',
             '/favicon.ico' => 'Scaffold::Handler::Favicon',
             '/static'      => 'Scaffold::Handler::Static',
@@ -28,6 +33,9 @@ main: {
         render => Scaffold::Render::TT->new(
             include_path => 'html:html/resources/templates',
         ),
+        lockmgr => Scaffold::Lockmgr::UnixMutex->new(
+            key => 1234
+        )
     );
 
     $psgi_handler = $server->engine->psgi_handler();

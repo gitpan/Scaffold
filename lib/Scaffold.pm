@@ -1,10 +1,10 @@
 package Scaffold;
 
-use 5.008008;
+use 5.8.8;
 use warnings;
 use strict;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 1; 
 
@@ -277,6 +277,7 @@ See, simple, no muss, no fuss.
 
  Scaffold::Lockmgr
  Scaffold::Lockmgr::KeyedMutex
+ Scaffold::Lockmgr::UnixMutex
 
  Scaffold::Plugins
 

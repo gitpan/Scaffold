@@ -1,10 +1,8 @@
 package Scaffold::Session::Manager;
 
-use strict;
-use warnings;
-
 our $VERSION = '0.01';
 
+use 5.8.8;
 use HTTP::Session;
 use HTTP::Session::State::Cookie;
 use Scaffold::Session::Store::Cache;
@@ -50,6 +48,7 @@ sub pre_action {
     $session->set('access', time()) if (not $access);
 
     $self->scaffold->session($session);
+    $self->scaffold->lockmgr->allocate($session->session_id);
 
     return PLUGIN_NEXT;
 
@@ -58,9 +57,11 @@ sub pre_action {
 sub pre_exit {
     my ($self, $hobj) = @_;
 
-    my $response = $self->scaffold->response;
     my $session = $self->scaffold->session;
+    my $lockmgr = $self->scaffold->lockmgr;
+    my $response = $self->scaffold->response;
 
+    $lockmgr->deallocate($session->session_id);
     $session->set('access', time());
     $session->response_filter($response);
 
@@ -80,7 +81,7 @@ __END__
 
 =head1 NAME
 
-Scaffold::SessionManager - The class for Sessions in Scaffold
+Scaffold::Session::Manager - The class for Sessions in Scaffold
 
 =head1 SYNOPSIS
 
@@ -90,10 +91,12 @@ created and the last access time.
 
 =head1 DESCRIPTION
 
-All access to a Scaffold application has an associated session. The session 
-uses the default caching mechanism to store the session context. There is no
-default locking to control access to this session context. This must done using
-the Scaffold LockManager. Session meta data is stored in a temporary cookie. 
+All access to Scaffold applications have an associated session. The session 
+uses the caching mechanism to store the session context. There is no
+default locking to control access to this context, but it does allocate
+a lock within the Lock Manager in case this is neccessary. Any resource 
+locking must be done using the Lock Manager. Session meta data is stored in 
+temporary cookies.
 
 =head1 ACCESSORS
 
@@ -113,11 +116,13 @@ the Scaffold LockManager. Session meta data is stored in a temporary cookie.
  Scaffold::Constants
  Scaffold::Engine
  Scaffold::Handler
+ Scaffold::Handler::Default
  Scaffold::Handler::Favicon
  Scaffold::Handler::Robots
  Scaffold::Handler::Static
  Scaffold::Lockmgr
  Scaffold::Lockmgr::KeyedMutex
+ Scaffold::Lockmgr::UnixMutex
  Scaffold::Plugins
  Scaffold::Render
  Scaffold::Render::Default

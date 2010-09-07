@@ -1,65 +1,24 @@
-package Scaffold::Stash::Manager;
+package Scaffold::Handler::Default;
 
 our $VERSION = '0.01';
 
 use 5.8.8;
-use Scaffold::Class
-  version   => $VERSION,
-  base      => 'Scaffold::Plugins',
-  constants => ':plugins SESSION_ID',
-;
 
-use Data::Dumper;
+use Scaffold::Class
+  version    => $VERSION,
+  filesystem => 'File',
+  base       => 'Scaffold::Handler',
+  constants  => 'TRUE FALSE',
+;
 
 # ----------------------------------------------------------------------
 # Public Methods
 # ----------------------------------------------------------------------
 
-sub pre_exit {
-    my ($self, $hobj) = @_;
+sub do_default {
+    my ($self, @params) = @_;
 
-    my @cookies = $self->stash->cookies->get();
-
-    foreach my $key (@cookies) {
-
-        next if ($key eq SESSION_ID); # handled by Session/Manager
-
-        my $cookie = $self->stash->cookies->get($key);
-
-        my $values = {
-            value => $cookie->value,
-            path  => $cookie->path,
-        };
-
-        if ($cookie->secure) {
-
-            $values->{secure} = $cookie->secure;
-
-        }
-
-        if ($cookie->httponly) {
-
-            $values->{httponly} = $cookie->httponly;
-
-        }
-
-        if ($cookie->domain) {
-
-            $values->{domain} = $cookie->domain;
-
-        }
-
-        if ($cookie->expires) {
-
-            $values->{expires} = $cookie->expires;
-
-        }
-
-        $self->scaffold->response->cookies->{$cookie->name} = $values;
-
-    }
-      
-    return PLUGIN_NEXT;
+    $self->bad_url(File(@params));
 
 }
 
@@ -73,23 +32,31 @@ __END__
 
 =head1 NAME
 
-Scaffold::Stash::Manager - A plugin to manage cookies
+Scaffold::Handler::Default - The default handler
+
+=head1 SYNOPSIS
+
+ use Scaffold::Server;
+
+ my $server = Scaffold::Server->new(
+    configs => {
+         static_search => 'html:html/static',
+         cache_static  => FALSE,
+    },
+    default_handler => 'Scaffold::Handler::Default',
+    locations => {
+        '/'            => 'App::Main',
+        '/robots.txt'  => 'Scaffold::Handler::Robots',
+        '/favicon.ico' => 'Scaffold::Handler::Favicon',
+        '/static'      => 'Scaffold::Handler::Static',
+    },
+ );
 
 =head1 DESCRIPTION
 
-This plugin places the stashed cookies into the response header.
-
-=head1 METHODS
-
-=over 4
-
-=item pre_exit
-
-Places the stashed cookies into the respone header.
-
-=back
-
-=head1 DEPENDENICES
+This handler provides a "default" action for any locations that are not 
+specified in the "locations" config directive. By default it displays the
+Scaffold error page with the "bad" url.
 
 =head1 SEE ALSO
 
@@ -119,7 +86,6 @@ Places the stashed cookies into the respone header.
  Scaffold::Stash
  Scaffold::Stash::Controller
  Scaffold::Stash::Cookie
- Scaffold::Stash::Manager
  Scaffold::Stash::View
  Scaffold::Uaf::Authenticate
  Scaffold::Uaf::AuthorizeFactory
@@ -134,14 +100,14 @@ Places the stashed cookies into the respone header.
 
 =head1 AUTHOR
 
-Kevin L. Esteb <kesteb@wsipc.org>
+Kevin L. Esteb, E<lt>kesteb@wsipc.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2009 Kevin L. Esteb
+Copyright (C) 2010 by Kevin L. Esteb
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself, either Perl version 5.8.6 or,
+it under the same terms as Perl itself, either Perl version 5.8.5 or,
 at your option, any later version of Perl 5 you may have available.
 
 =cut

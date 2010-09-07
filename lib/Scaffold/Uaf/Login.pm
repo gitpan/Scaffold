@@ -1,10 +1,8 @@
 package Scaffold::Uaf::Login;
 
-use strict;
-use warnings;
-
 our $VERSION = '0.01';
 
+use 5.8.8;
 use DateTime;
 use Try::Tiny;
 use Digest::MD5;
@@ -36,7 +34,7 @@ sub do_main {
     $title = $self->uaf_login_title;
     $wrapper = $self->uaf_login_wrapper;
     $template = $self->uaf_login_template;
-    
+
     if ($self->scaffold->lockmgr->lock($lock)) {
 
         $attempts = $self->scaffold->session->get('uaf_login_attempts') || 0;
@@ -218,11 +216,13 @@ with the session cookies.
  Scaffold::Constants
  Scaffold::Engine
  Scaffold::Handler
+ Scaffold::Handler::Default
  Scaffold::Handler::Favicon
  Scaffold::Handler::Robots
  Scaffold::Handler::Static
  Scaffold::Lockmgr
  Scaffold::Lockmgr::KeyedMutex
+ Scaffold::Lockmgr::UnixMutex
  Scaffold::Plugins
  Scaffold::Render
  Scaffold::Render::Default
