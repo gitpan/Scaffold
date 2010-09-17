@@ -4,7 +4,7 @@ use 5.8.8;
 use warnings;
 use strict;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 1; 
 
@@ -271,6 +271,7 @@ See, simple, no muss, no fuss.
  Scaffold::Handler
  Scaffold::Handler::ExtDirect
  Scaffold::Handler::ExtPoll
+ Scaffold::Handler::Default
  Scaffold::Handler::Favicon
  Scaffold::Handler::Robots
  Scaffold::Handler::Static

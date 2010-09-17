@@ -16,7 +16,7 @@ name: Scaffold
 provides:
   Scaffold:
     file: lib/Scaffold.pm
-    version: 0.03
+    version: 0.04
   Scaffold::Base:
     file: lib/Scaffold/Base.pm
     version: 0.01
@@ -70,7 +70,7 @@ provides:
     version: 0.01
   Scaffold::Lockmgr::UnixMutex:
     file: lib/Scaffold/Lockmgr/UnixMutex.pm
-    version: 0.01
+    version: 0.02
   Scaffold::Plugins:
     file: lib/Scaffold/Plugins.pm
     version: 0.01
@@ -85,7 +85,7 @@ provides:
     version: 0.01
   Scaffold::Server:
     file: lib/Scaffold/Server.pm
-    version: 0.01
+    version: 0.02
   Scaffold::Session::Manager:
     file: lib/Scaffold/Session/Manager.pm
     version: 0.01
@@ -137,4 +137,4 @@ provides:
     version: 0.01
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.03
+version: 0.04
