@@ -68,11 +68,11 @@ Scaffold::Lockmgr - The base class for locking within Scaffold
 =head1 DESCRIPTION
 
 This module provides a general purpose locking mechanism to protect shared 
-resources. It is rather interesting to ask a developer how they protect session 
-data and/or global shared data. They usually answer, "I use such-and-such 
-session module, and what do you mean by "global shared data" ?". Well, for 
-those who understand the need for resource locking, this module provides it 
-for Scaffold.
+resources. It is rather interesting to ask a developer how they protect 
+session data and/or global shared data. They usually answer, "I use 
+such-and-such session module, and what do you mean by "global shared data" ?". 
+Well, for those who understand the need for resource locking, this module 
+provides it for Scaffold.
 
 =head1 METHODS
 
@@ -136,6 +136,7 @@ is available.
  Scaffold::Render
  Scaffold::Render::Default
  Scaffold::Render::TT
+ Scaffold::Routes
  Scaffold::Server
  Scaffold::Session::Manager
  Scaffold::Stash
@@ -155,7 +156,7 @@ is available.
 
 =head1 AUTHOR
 
-Kevin L. Esteb, E<lt>kesteb@wsipc.orgE<gt>
+Kevin L. Esteb, E<lt>kevin@kesteb.usE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 

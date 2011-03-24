@@ -228,7 +228,7 @@ This module understands the following config settings:
 
 This method is used to authenticate the current session. The
 default authentication behaviour is based on security tokens. A token is 
-storeed within the session store and a token is retireved from a cookie. If 
+stored within the session store and a token is retireved from a cookie. If 
 the two match, the session is condsidered autheticate. When the session is 
 authenticated an User object is returned.
 
@@ -335,11 +335,13 @@ These accessors return the corresponding config items.
  Scaffold::Render
  Scaffold::Render::Default
  Scaffold::Render::TT
+ Scaffold::Routes
  Scaffold::Server
  Scaffold::Session::Manager
  Scaffold::Stash
  Scaffold::Stash::Controller
  Scaffold::Stash::Cookie
+ Scaffold::Stash::Manager
  Scaffold::Stash::View
  Scaffold::Uaf::Authenticate
  Scaffold::Uaf::AuthorizeFactory
@@ -354,7 +356,7 @@ These accessors return the corresponding config items.
 
 =head1 AUTHOR
 
-Kevin L. Esteb <kesteb@wsipc.org>
+Kevin L. Esteb E<lt>kevin@kesteb.usE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 

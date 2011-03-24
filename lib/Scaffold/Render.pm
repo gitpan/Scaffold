@@ -37,20 +37,14 @@ Scaffold::Render - The base class for rendering.
 =head1 SYNOPSIS
 
     my $server = Scaffold::Server->new(
-        locations => {
-            '/'            => 'App::Main',
-            '/robots.txt'  => 'Scaffold::Handler::Robots',
-            '/favicon.ico' => 'Scaffold::Handler::Favicon',
-            '/static'      => 'Scaffold::Handler::Static',
-        },
         render => Scaffold::Render::Default->new()
     );
 
 =head1 DESCRIPTION
 
 This is the base class for rendering output. If no renderer is specified, 
-Scaffold will use Scaffold::Render::Default. The View object of the Handlers
-stash is used to control the render process. 
+Scaffold will use Scaffold::Render::Default. The View object of the 
+handlers stash is used to control the render process. 
 
 =head1 METHODS
 
@@ -85,6 +79,7 @@ This invokes the rendering process.
  Scaffold::Render
  Scaffold::Render::Default
  Scaffold::Render::TT
+ Scaffold::Routes
  Scaffold::Server
  Scaffold::Session::Manager
  Scaffold::Stash
@@ -104,7 +99,7 @@ This invokes the rendering process.
 
 =head1 AUTHOR
 
-Kevin L. Esteb, E<lt>kesteb@wsipc.orgE<gt>
+Kevin L. Esteb, E<lt>kevin@kesteb.usE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 

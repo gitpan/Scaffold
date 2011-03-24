@@ -56,11 +56,13 @@ is a good idea to replace this module with something better.
  Scaffold::Render
  Scaffold::Render::Default
  Scaffold::Render::TT
+ Scaffold::Routes
  Scaffold::Server
  Scaffold::Session::Manager
  Scaffold::Stash
  Scaffold::Stash::Controller
  Scaffold::Stash::Cookie
+ Scaffold::Stash::Manager
  Scaffold::Stash::View
  Scaffold::Uaf::Authenticate
  Scaffold::Uaf::AuthorizeFactory
@@ -75,7 +77,7 @@ is a good idea to replace this module with something better.
 
 =head1 AUTHOR
 
-Kevin L. Esteb
+Kevin L. Esteb E<lt>kevin@kesteb.usE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 

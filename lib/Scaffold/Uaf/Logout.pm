@@ -32,7 +32,7 @@ sub do_main {
 
         $self->uaf_invalidate();
         $self->scaffold->lockmgr->unlock($lock);
-	$self->scaffold->lockmgr->deallocate($lock);
+        $self->scaffold->lockmgr->deallocate($lock);
 
     } else {
 
@@ -41,6 +41,7 @@ sub do_main {
     }
 
 }
+
 
 # -----------------------------------------------------------------
 # Private Methods
@@ -101,11 +102,13 @@ It also invalidates the session.
  Scaffold::Render
  Scaffold::Render::Default
  Scaffold::Render::TT
+ Scaffold::Routes
  Scaffold::Server
  Scaffold::Session::Manager
  Scaffold::Stash
  Scaffold::Stash::Controller
  Scaffold::Stash::Cookie
+ Scaffold::Stash::Manager
  Scaffold::Stash::View
  Scaffold::Uaf::Authenticate
  Scaffold::Uaf::AuthorizeFactory
@@ -120,7 +123,7 @@ It also invalidates the session.
 
 =head1 AUTHOR
 
-Kevin L. Esteb, E<lt>kesteb@wsipc.orgE<gt>
+Kevin L. Esteb, E<lt>kevin@kesteb.usE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 

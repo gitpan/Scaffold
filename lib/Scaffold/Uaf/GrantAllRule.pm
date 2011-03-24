@@ -77,11 +77,13 @@ that people will complain about (so you can fix it).
  Scaffold::Render
  Scaffold::Render::Default
  Scaffold::Render::TT
+ Scaffold::Routes
  Scaffold::Server
  Scaffold::Session::Manager
  Scaffold::Stash
  Scaffold::Stash::Controller
  Scaffold::Stash::Cookie
+ Scaffold::Stash::Manager
  Scaffold::Stash::View
  Scaffold::Uaf::Authenticate
  Scaffold::Uaf::AuthorizeFactory
@@ -96,7 +98,7 @@ that people will complain about (so you can fix it).
 
 =head1 AUTHOR
 
-Kevin L. Esteb
+Kevin L. Esteb E<lt>kevin@kesteb.usE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 

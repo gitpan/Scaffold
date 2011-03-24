@@ -22,7 +22,7 @@ sub do_default {
     my $found = FALSE;
     my $cache = $self->scaffold->cache;
     my $static_search = $self->scaffold->config('configs')->{static_search};
-    my $cache_static = $self->scaffold->config('configs')->{cache_static};
+    my $static_cached = $self->scaffold->config('configs')->{static_cached};
     my @paths = split(':', $static_search);
 
     foreach my $path (@paths) {
@@ -30,7 +30,7 @@ sub do_default {
         my $file = File($path, @params);
 
         if ($file->exists) {
-	    
+
             my $d;
             my ($mediatype, $encoding) = by_suffix($file);
             $found = TRUE;
@@ -39,7 +39,7 @@ sub do_default {
 
                 $d = $file->read();
 
-                if ($cache_static) {
+                if ($static_cached) {
 
                     $self->stash->view->cache(1);
                     $self->stash->view->cache_key($file);
@@ -79,14 +79,23 @@ Scaffold::Handler::Static - A handler for static files
  my $server = Scaffold::Server->new(
     configs => {
          static_search => 'html:html/static',
-         cache_static  => FALSE,
+         static_cached => FALSE,
     },
-    locations => {
-        '/'            => 'App::Main',
-        '/robots.txt'  => 'Scaffold::Handler::Robots',
-        '/favicon.ico' => 'Scaffold::Handler::Favicon',
-        '/static'      => 'Scaffold::Handler::Static',
-    },
+    locations => [
+        {
+            route   => qr{^/$},
+            handler => 'App::Main'
+        },{ 
+            route   => qr{^/robots.txt$},
+            handler => 'Scaffold::Handler::Robots',
+        },{
+            route   => qr{^/favicon.ico$},
+            handler => 'Scaffold::Handler::Favicon',
+        },{
+            route   => qr{^/static/(.*)$},
+            handler => 'Scaffold::Handler::Static',
+        }
+    ] 
  );
 
 =head1 DESCRIPTION
@@ -96,7 +105,7 @@ located is controlled by the configs option "static_search". This is a colon
 seperated search list of directories to search. Think of the PATH 
 environment variable. The first matching file is sent. By default 
 "static" files will be cached. This can be turned off with
-the configs options "cache_static", which has a TRUE/FALSE value. This is a
+the configs options "static_cached", which has a TRUE/FALSE value. This is a
 global setting.
 
 =head1 SEE ALSO
@@ -122,6 +131,7 @@ global setting.
  Scaffold::Render
  Scaffold::Render::Default
  Scaffold::Render::TT
+ Scaffold::Routes
  Scaffold::Server
  Scaffold::Session::Manager
  Scaffold::Stash
@@ -141,7 +151,7 @@ global setting.
 
 =head1 AUTHOR
 
-Kevin L. Esteb, E<lt>kesteb@wsipc.orgE<gt>
+Kevin L. Esteb, E<lt>kevin@kesteb.usE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 

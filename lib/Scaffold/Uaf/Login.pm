@@ -85,7 +85,7 @@ sub do_validate {
     my $lock = $self->scaffold->session->session_id;
     my $params = $self->scaffold->request->parameters->as_hashref();
     my $app_rootp = $self->scaffold->config('configs')->{app_rootp};
-    
+
     $url = $login_rootp;
 
     try {
@@ -160,10 +160,10 @@ Scaffold::Uaf::Login - A handler for the /login url.
 
 This handler handles the url "/login" and any actions on that url. By default
 this method display a simple login page which contains a login form. That form 
-is submitted back to the "/login/validate" url, where the username and password are 
-processed. This processing is done by the uaf_validate() method. If validation is 
-succesful an User object is created. This object is then stored within the 
-session store so uaf_is_valid() can access it when doing  
+is submitted back to the "/login/validate" url, where the username and 
+password are processed. This processing is done by the uaf_validate() method. 
+If validation is succesful an User object is created. This object is then 
+stored within the session store so uaf_is_valid() can access it when doing  
 authentication. Also an initial security token is created. 
 
 This method also implements a simple three tries at login attempts. If after 
@@ -227,11 +227,13 @@ with the session cookies.
  Scaffold::Render
  Scaffold::Render::Default
  Scaffold::Render::TT
+ Scaffold::Routes
  Scaffold::Server
  Scaffold::Session::Manager
  Scaffold::Stash
  Scaffold::Stash::Controller
  Scaffold::Stash::Cookie
+ Scaffold::Stash::Manager
  Scaffold::Stash::View
  Scaffold::Uaf::Authenticate
  Scaffold::Uaf::AuthorizeFactory
@@ -246,7 +248,7 @@ with the session cookies.
 
 =head1 AUTHOR
 
-Kevin L. Esteb, E<lt>kesteb@wsipc.orgE<gt>
+Kevin L. Esteb, E<lt>kevin@kesteb.usE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 

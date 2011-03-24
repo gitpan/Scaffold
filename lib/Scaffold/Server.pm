@@ -6,6 +6,7 @@ use 5.8.8;
 use Try::Tiny;
 use Plack::Response;
 use Scaffold::Engine;
+use Scaffold::Routes;
 use Scaffold::Cache::Manager;
 use Scaffold::Stash::Manager;
 use Scaffold::Render::Default;
@@ -16,7 +17,7 @@ use Scaffold::Lockmgr::UnixMutex;
 use Scaffold::Class
   version    => $VERSION,
   base       => 'Scaffold::Base',
-  accessors  => 'authz engine cache render database plugins request response lockmgr',
+  accessors  => 'authz engine cache render database plugins request response lockmgr routes',
   mutators   => 'session user',
   filesystem => 'File',
   utils      => 'init_module',
@@ -49,47 +50,25 @@ sub dispatch {
 
     my $class;
     my $response;
-    my $location;
-    my $processed = FALSE;
+    my $handler = '';
+    my @params = ();
     my $url = $request->path_info;
-    my $uri = lc($url);
-    my @path = split('/', $uri);
-    my $locations = $self->config('locations');
-
-    $path[0] = '/' if ($uri eq '/');
+    my $location = $request->uri->path;
 
     try {
 
-        while (@path) {
+        ($handler, @params) = $self->routes->dispatcher($url);
 
-            $location = join('/', @path);
+        if ($handler ne '') {
 
-            if (defined($locations->{$location})) {
+            $class = $self->_init_handler($handler, $location);
+            $response = $class->handler($self, ref($class), @params);
 
-                if (my $mod = $locations->{$location}) {
+        } else {
 
-                    $class = $self->_init_handler($mod, $location);
-                    $response = $class->handler($self, $location, ref($class));
-                    $processed = TRUE;
-                    last;
-
-                } else {
-
-                    $self->throw_msg(NODEFINE, 'nodefine', $location);
-
-                }
-
-            }
-
-            pop(@path);
-
-        }
-
-        if (! $processed) {
-
-            my $mod = $self->config('default_handler');
-            $class = $self->_init_handler($mod, $location);
-            $response = $class->handler($self, $location, ref($class));
+            $handler = $self->config('default_handler');
+            $class = $self->_init_handler($handler, $location);
+            $response = $class->handler($self, ref($class), @params);
 
         }
 
@@ -213,6 +192,9 @@ sub init {
 
     }
 
+    my $routes = $self->config('locations');
+    $self->{routes} = Scaffold::Routes->new(routes => $routes);
+
     $engine = $self->config('engine');
 
     $self->{engine} = Scaffold::Engine->new(
@@ -274,16 +256,15 @@ sub _init_handler {
 
     try {
 
-        if (defined($self->{config}->{handlers}->{$location})) {
+        if (defined($self->{config}->{handlers}->{$handler})) {
 
-            $obj = $self->{config}->{handlers}->{$location}->{handler};
+            $obj = $self->{config}->{handlers}->{$handler};
 
         } else {
 
             $obj = init_module($handler);
 
-            $self->{config}->{handlers}->{location} = $location;
-            $self->{config}->{handlers}->{$location}->{handler} = $obj;
+            $self->{config}->{handlers}->{$handler} = $obj;
 
         }
 
@@ -321,9 +302,9 @@ sub _set_config_defaults {
 
     }
 
-    if (! defined($self->{config}->{configs}->{cache_static})) {
+    if (! defined($self->{config}->{configs}->{static_cached})) {
 
-        $self->{config}->{configs}->{cache_static} = TRUE;
+        $self->{config}->{configs}->{static_cached} = TRUE;
 
     }
 
@@ -379,30 +360,35 @@ Scaffold::Server - The Scaffold web engine
  --------
 
  use lib 'lib';
- use lib '../lib';
  use Scaffold::Server;
- use Scaffold::Render::TT;
 
  my $psgi_handler;
 
  main: {
 
     my $server = Scaffold::Server->new(
-        locations => {
-            '/'            => 'App::Main',
-            '/robots.txt'  => 'Scaffold::Handler::Robots',
-            '/favicon.ico' => 'Scaffold::Handler::Favicon',
-            '/static'      => 'Scaffold::Handler::Static',
-            '/login'       => 'Scaffold::Uaf::Login',
-            '/logout'      => 'Scaffold::Uaf::Logout',
-        },
+        locations => [
+            }
+                route   => qr{^/robots.txt$},
+                handler => 'Scaffold::Handler::Robots',
+            },{
+                route   => qr{^/favicon.ico$},
+                handler => 'Scaffold::Handler::Favicon',
+            },{
+                route   => qr{^/login/(.*)$},
+                handler => 'Scaffold::Uaf::Login',
+            },{
+                route   => qr{^/logout$},
+                handler => 'Scaffold::Uaf::Logout',
+            },{
+                route   => qr{^/(.*)$},
+                handler => 'Scaffold::Handler::Static',
+            }
+        ],
         authorization => {
             authenticate => 'Scaffold::Uaf::Manager',
             authorize    => 'Scaffold::Uaf::AuthorizeFactory',
-        },
-        render => Scaffold::Render::TT->new(
-            include_path => 'html:html/resources/templates',
-        ),
+        }
     );
 
     $psgi_hander = $server->engine->psgi_handler();
@@ -422,7 +408,7 @@ authentication for access.
 This module is the main entry point for an application built with Scaffold. 
 It parses the configuration, loads the various components, makes the various 
 connections for the CacheManager, the LockManager, initializes the 
-SessionManager and will connect to the database of your choice.
+SessionManager and store the connect to the database of your choice.
 
 =head1 METHODS
 
@@ -477,7 +463,7 @@ handling.
 
 =head1 AUTHOR
 
-Kevin L. Esteb, E<lt>kesteb@wsipc.orgE<gt>
+Kevin L. Esteb, E<lt>kevin@kesteb.usE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 

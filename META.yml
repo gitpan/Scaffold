@@ -1,7 +1,7 @@
 ---
-abstract: 'A web application framework'
+abstract: 'Web Application Infrastructure'
 author:
-  - 'Kevin L. Esteb <kesteb@wsipc.org>'
+  - 'Kevin L. Esteb <kevin@kesteb.us>'
 build_requires:
   Pod::Coverage: 0.00
   Test::More: 0.00
@@ -16,7 +16,7 @@ name: Scaffold
 provides:
   Scaffold:
     file: lib/Scaffold.pm
-    version: 0.04
+    version: 0.05
   Scaffold::Base:
     file: lib/Scaffold/Base.pm
     version: 0.01
@@ -83,6 +83,9 @@ provides:
   Scaffold::Render::TT:
     file: lib/Scaffold/Render/TT.pm
     version: 0.01
+  Scaffold::Routes:
+    file: lib/Scaffold/Routes.pm
+    version: 0.01
   Scaffold::Server:
     file: lib/Scaffold/Server.pm
     version: 0.02
@@ -137,4 +140,4 @@ provides:
     version: 0.01
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.04
+version: 0.05
