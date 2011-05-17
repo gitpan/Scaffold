@@ -50,25 +50,23 @@ sub dispatch {
 
     my $class;
     my $response;
-    my $handler = '';
-    my @params = ();
     my $url = $request->path_info;
     my $location = $request->uri->path;
 
     try {
 
-        ($handler, @params) = $self->routes->dispatcher($url);
+        my ($handler, @params) = $self->routes->dispatcher($url);
 
         if ($handler ne '') {
 
             $class = $self->_init_handler($handler, $location);
-            $response = $class->handler($self, ref($class), @params);
+            $response = $class->handler(ref($class), @params);
 
         } else {
 
             $handler = $self->config('default_handler');
             $class = $self->_init_handler($handler, $location);
-            $response = $class->handler($self, ref($class), @params);
+            $response = $class->handler(ref($class), @params);
 
         }
 
@@ -127,8 +125,8 @@ sub init {
 
     }
 
-    push(@{$self->{plugins}}, Scaffold::Cache::Manager->new());
-    push(@{$self->{plugins}}, Scaffold::Stash::Manager->new());
+    $self->_init_plugin('Scaffold::Cache::Manager');
+    $self->_init_plugin('Scaffold::Stash::Manager');
 
     # init rendering
 
@@ -215,7 +213,7 @@ sub _init_plugin {
 
     try {
 
-        my $obj = init_module($plugin);
+        my $obj = init_module($plugin, $self);
         push(@{$self->{plugins}}, $obj);
 
     } catch {
@@ -235,7 +233,7 @@ sub _init_module {
 
     try {
 
-        $obj = init_module($module);
+        $obj = init_module($module, $self);
 
     } catch {
 
@@ -262,7 +260,7 @@ sub _init_handler {
 
         } else {
 
-            $obj = init_module($handler);
+            $obj = init_module($handler, $self);
 
             $self->{config}->{handlers}->{$handler} = $obj;
 
@@ -331,13 +329,29 @@ sub _set_config_defaults {
 sub _unexpected_exception {
     my ($self, $ex) = @_;
 
-    my $text = qq(
-        Unexpected exception caught<br />
-        <span style='font-size: .8em'>
-        Type: $ex->type<br />
-        Info: $ex->info<br />
-        </span>
-    );
+    my $text;
+    my $ref = ref($ex);
+
+    if ($ref && $ex->isa('Badger::Exception')) {
+
+        $text = qq(
+            Unexpected exception caught<br />
+            <span style='font-size: .8em'>
+            Type: $ex->type<br />
+            Info: $ex->info<br />
+            </span>
+        );
+        
+    } else {
+        
+        $text = qq(
+            Unexpected exception caught<br />
+            <span style='font-size: .8em'>
+            Message: $ex<br />
+            </span>
+        );
+        
+    }
 
     my $page = $self->custom_error($self, 'Unexcpected Exception', $text);
 

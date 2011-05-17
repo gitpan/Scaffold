@@ -1,6 +1,6 @@
 package Scaffold::Routes;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use Scaffold::Class
   version   => $VERSION,
@@ -50,18 +50,28 @@ sub init {
 sub _parse_url {
     my ($self, $url) = @_;
 
-    for (@{$self->routes}) {
+    my @temp;
+
+    for (@{$self->{routes}}) {
 
         if (my (@vars) = $url =~ m/$_->{route}/i) {
-            
-            $vars[0] = '' if ($vars[0] eq 1);
-            return ($_->{handler}, @vars);
+
+            # clean out any undef's
+
+            foreach my $item (@vars) {
+                if (defined($item)) {
+                    push(@temp, $item);
+                }
+            }
+
+            return ($_->{handler}, @temp);
 
         }
 
     }
 
     return;
+
 }
 
 1;

@@ -38,22 +38,22 @@ use Data::Dumper;
 # ----------------------------------------------------------------------
 
 sub handler {
-    my ($class, $sobj, $module, @params) = @_;
+    my ($class, $module, @params) = @_;
 
-    $class->{scaffold} = $sobj;
+    my $action;
+    my $location;
+    my $state = STATE_PRE_ACTION;
+    my $p1 = ( shift(@params) || 'main' );
+    my $root = $class->scaffold->config('configs')->{'app_rootp'};
+
+    $p1 = 'main' if ($p1 eq '1');
+    $action = 'do_' . $p1;
+
     $class->{stash} = Scaffold::Stash->new(
         request => $class->scaffold->request
     );
 
-    my $location;
-    my $root = $sobj->config('configs')->{'app_rootp'};
-
-    $class->{page_title} = $location = $sobj->request->uri->path;
-
-    my $state = STATE_PRE_ACTION;
-    my $p1 = ( shift(@params) || 'main' );
-
-    my $action = 'do_' . $p1;
+    $class->{page_title} = $location = $class->scaffold->request->uri->path;
 
     $class->scaffold->response->status('200');
     $class->scaffold->response->header('Content-Type' => 'text/html');
@@ -231,6 +231,16 @@ sub exceptions {
 # Private Methods
 # ----------------------------------------------------------------------
 
+sub init {
+    my ($self, $config) = @_;
+
+    $self->{config} = $config;
+    $self->{scaffold} = $config->{scaffold};
+
+    return $self;
+
+}
+
 sub _pre_action {
     my ($self) = @_;
 
@@ -241,8 +251,6 @@ sub _pre_action {
 
         foreach my $plugin (@$plugins) {
 
-            $plugin->stash($self->stash);
-            $plugin->scaffold($self->scaffold);
             $pstatus = $plugin->pre_action($self);
             last if ($pstatus != PLUGIN_NEXT);
 
@@ -257,10 +265,8 @@ sub _pre_action {
 sub _perform_action {
     my ($self, $action , $p1, @p) = @_;
 
-    $self->stash->view->reinit();
-
     if ($self->can($action)) {
-
+        
         $self->$action(@p);
 
     } elsif ($self->can('do_default')) {
@@ -289,8 +295,6 @@ sub _post_action {
 
         foreach my $plugin (@$plugins) {
 
-            $plugin->stash($self->stash);
-            $plugin->scaffold($self->scaffold);
             $pstatus = $plugin->post_action($self);
             last if ($pstatus != PLUGIN_NEXT);
 
@@ -312,8 +316,6 @@ sub _pre_render {
 
         foreach my $plugin (@$plugins) {
 
-            $plugin->stash($self->stash);
-            $plugin->scaffold($self->scaffold);
             $pstatus = $plugin->pre_render($self);
             last if ($pstatus != PLUGIN_NEXT);
 
@@ -384,8 +386,6 @@ sub _post_render {
 
         foreach my $plugin (@$plugins) {
 
-            $plugin->stash($self->stash);
-            $plugin->scaffold($self->scaffold);
             $pstatus = $plugin->post_render($self);
             last if ($pstatus != PLUGIN_NEXT);
 
@@ -406,8 +406,6 @@ sub _pre_exit {
 
         foreach my $plugin (@$plugins) {
 
-            $plugin->stash($self->stash);
-            $plugin->scaffold($self->scaffold);
             $pstatus = $plugin->pre_exit($self);
             last if ($pstatus != PLUGIN_NEXT);
 

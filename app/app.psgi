@@ -24,18 +24,15 @@ main: {
                 handler => 'App::Main',
             },{
                route   => qr{^/robots.txt$},
-               handler => 'Scaffold::Handler::Robots',
+               handler => 'App::Robots',
             },{
                route   => qr{^/favicon.ico$},
-               handler => 'Scaffold::Handler::Favicon',
+               handler => 'App::Favicon',
             },{
                route   => qr{^/static/(.*)$},
-               handler => 'Scaffold::Handler::Static',
+               handler => 'App::Static',
             },{
-                route   => qr{^/login/(\w+)$},
-                handler => => 'Scaffold::Uaf::Login',
-            },{
-                route   => qr{^/login$},
+                route   => qr{^/login$|^/login/(\w+)$},
                 handler => => 'Scaffold::Uaf::Login',
             },{
                 route   => qr{^/logout$},
