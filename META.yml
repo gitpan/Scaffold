@@ -16,7 +16,7 @@ name: Scaffold
 provides:
   Scaffold:
     file: lib/Scaffold.pm
-    version: 0.06
+    version: 0.07
   Scaffold::Base:
     file: lib/Scaffold/Base.pm
     version: 0.01
@@ -140,4 +140,4 @@ provides:
     version: 0.01
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.06
+version: 0.07

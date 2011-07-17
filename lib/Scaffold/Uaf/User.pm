@@ -16,8 +16,8 @@ use Scaffold::Class
 sub attribute {
     my ($self, $key, $value) = @_;
 
-    $self->{$key} = $value if (defined($value));
-    return $self->{$key};
+    $self->{attributes}->{$key} = $value if (defined($value));
+    return $self->{attributes}->{$key};
 
 }
     

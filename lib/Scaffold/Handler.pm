@@ -265,9 +265,11 @@ sub _pre_action {
 sub _perform_action {
     my ($self, $action , $p1, @p) = @_;
 
-    if ($self->can($action)) {
-        
-        $self->$action(@p);
+    my $method = lc($action);
+
+    if ($self->can($method)) {
+
+        $self->$method(@p);
 
     } elsif ($self->can('do_default')) {
 
@@ -331,13 +333,13 @@ sub _process_render {
     my ($self) = @_;
 
     my $status = STATE_POST_RENDER;
-    my $input = $self->stash->view;
-    my $page = $self->stash->view->data;
-    my $cache = $self->scaffold->cache;
+    my $view   = $self->stash->view;
+    my $cache  = $self->scaffold->cache;
+    my $page   = $self->stash->view->data;
 
     # set the content type
 
-    if (my $type = $self->stash->view->content_type) {
+    if (my $type = $view->content_type) {
 
         $self->scaffold->response->header('Content-Type' => $type);
 
@@ -345,24 +347,23 @@ sub _process_render {
 
     # render the output
 
-    if (my $render = $self->scaffold->render) {
+    if (! $view->template_disabled) {
 
-        if (! $input->template_disabled) {
+        if ($view->cache) {
 
-            $page = $render->process($self);
-            $self->scaffold->response->body($page);
+            if ($page = $cache->get($view->cache_key)) {
+
+                $self->scaffold->response->body($page);
+
+            } else {
+
+                $self->_process_page($page);
+
+            }
 
         } else {
 
-            $self->scaffold->response->body($page);
-
-        }
-
-        # cache the output
-
-        if ($input->cache) {
-
-            $cache->set($input->cache_key, $page);
+            $self->_process_page($page);
 
         }
 
@@ -373,6 +374,35 @@ sub _process_render {
     }
 
     return $status;
+
+}
+
+sub _process_page {
+    my $self = shift;
+
+    my $view  = $self->stash->view;
+    my $cache = $self->scaffold->cache;
+    my $page  = $self->stash->view->data;
+
+    if (my $render = $self->scaffold->render) {
+
+        if (! $view->template_disabled) {
+
+            $page = $render->process($self);
+
+        }
+
+        # cache the output
+
+        if ($view->cache) {
+
+            $cache->set($view->cache_key, $page);
+
+        }
+
+    }
+
+    $self->scaffold->response->body($page);
 
 }
 
