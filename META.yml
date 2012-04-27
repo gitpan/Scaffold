@@ -16,7 +16,7 @@ name: Scaffold
 provides:
   Scaffold:
     file: lib/Scaffold.pm
-    version: 0.09
+    version: 0.10
   Scaffold::Base:
     file: lib/Scaffold/Base.pm
     version: 0.01
@@ -68,6 +68,8 @@ provides:
   Scaffold::Lockmgr::KeyedMutex:
     file: lib/Scaffold/Lockmgr/KeyedMutex.pm
     version: 0.01
+  Scaffold::Lockmgr::SharedMem:
+    file: lib/Scaffold/Lockmgr/SharedMem.pm
   Scaffold::Lockmgr::UnixMutex:
     file: lib/Scaffold/Lockmgr/UnixMutex.pm
     version: 0.03
@@ -140,4 +142,4 @@ provides:
     version: 0.01
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.09
+version: 0.10

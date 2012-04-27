@@ -44,8 +44,8 @@ Revision history for Scaffold
         svn log -r 149:160
 
 0.08    10-Nov-2011 K.Esteb
-        Fixed a problem where the cache was not being cleared correctly.
-          UnixMutex.pm was using the wrong set() method.
+        Fixed a problem where the cache was not being cleared correctly,
+          Cache/FastMmap.pm was using the wrong set() method.
         Fixed returning an uninitialized value in Routes.pm
         Fixed an error message in UnixMutex.pm
         svn log -r 161:167
@@ -54,4 +54,10 @@ Revision history for Scaffold
         Rewrote UnixMutex.pm to work properly. This should resolve
         problems with ramdom lockup and semaphore errors.
         svn log -r 168:170
-        
+
+0.10    23-Apr-2012 K.Esteb
+        Added the setting of gid, uid and mode within UnixMutex.pm. This
+          should resolve the problem of the semaphore and shared memory
+          segmenets being removed under RHEL v5.*.
+        svn log -r 171:178
+
